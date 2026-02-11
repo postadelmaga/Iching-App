@@ -8,15 +8,17 @@ interface HexagramDisplayProps {
     label?: string;
     showTrigrams?: boolean;
     showName?: boolean;
+    onlyChineseName?: boolean;
     className?: string;
 }
 
 const HexagramDisplay: React.FC<HexagramDisplayProps> = ({ 
     lines, 
     data, 
-    label = "HEXAGRAM", 
+    label, 
     showTrigrams = true,
     showName = true,
+    onlyChineseName = false,
     className = "" 
 }) => {
     // Split lines into lower (0-2) and upper (3-5) sets
@@ -62,19 +64,18 @@ const HexagramDisplay: React.FC<HexagramDisplayProps> = ({
         <div className={`flex flex-col items-center bg-card-dark p-8 rounded-2xl border border-white/5 shadow-2xl w-full max-w-sm ${className}`}>
             {/* Header */}
             <div className={`text-center w-full ${showName ? 'mb-8' : 'mb-6'}`}>
-                {label && <div className="text-lg font-bold tracking-[0.2em] text-primary mb-2 uppercase opacity-80">{label}</div>}
+                {label && <div className="text-sm font-bold tracking-[0.2em] text-primary mb-3 uppercase opacity-90">{label}</div>}
                 
                 {showName && (
                     <>
-                        {/* Fixed height container for Title to prevent layout shift between short/long names */}
-                        <div className="h-[90px] flex items-center justify-center px-1">
-                            <h2 className="text-3xl font-serif font-bold text-white leading-tight">
-                                <span className="text-gray-400 text-2xl mr-2 font-light">{data.number}.</span>
+                        {!onlyChineseName && (
+                            <h2 className="text-3xl md:text-4xl font-serif font-bold text-white leading-tight mb-2">
+                                <span className="text-gray-500 mr-2 opacity-50 font-light text-2xl align-middle">{data.number}.</span>
                                 {data.name}
                             </h2>
-                        </div>
+                        )}
                         
-                        <div className="text-gray-400 font-serif italic mt-1">{data.chineseName}</div>
+                        <div className="text-xl font-serif text-accent-gold italic opacity-80">{data.chineseName}</div>
                     </>
                 )}
             </div>

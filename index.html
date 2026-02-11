@@ -1,15 +1,23 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
-
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Universal I Ching Oracle</title>
+    <script>
+        // Suppress Tailwind CDN warning for this runtime environment
+        const originalWarn = console.warn;
+        console.warn = (...args) => {
+            if (args[0] && typeof args[0] === 'string' && args[0].includes('cdn.tailwindcss.com')) {
+                return;
+            }
+            originalWarn.apply(console, args);
+        };
+    </script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
     <script>
         tailwind.config = {
             darkMode: "class",
@@ -62,26 +70,22 @@
             margin: 0;
             overflow-x: hidden;
         }
-
         /* Custom scrollbar for webkit */
         ::-webkit-scrollbar {
             width: 8px;
         }
-
         ::-webkit-scrollbar-track {
             background: #141118;
         }
-
         ::-webkit-scrollbar-thumb {
             background: #333;
             border-radius: 4px;
         }
-
         ::-webkit-scrollbar-thumb:hover {
             background: #7311d4;
         }
     </style>
-    <script type="importmap">
+<script type="importmap">
 {
   "imports": {
     "react": "https://esm.sh/react@^19.2.4",
@@ -94,10 +98,8 @@
 }
 </script>
 </head>
-
 <body>
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
 </body>
-
 </html>

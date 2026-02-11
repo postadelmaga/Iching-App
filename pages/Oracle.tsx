@@ -97,15 +97,22 @@ const Oracle: React.FC = () => {
     // Helper for simple rendering during casting
     const renderSimpleLine = (val: LineValue) => {
         const isYang = val === 7 || val === 9;
+        const isMoving = val === 6 || val === 9;
+
+        // Colors: Moving = Purple, Static = White/Gray
+        const colorClass = isMoving 
+            ? "bg-primary shadow-[0_0_10px_rgba(115,17,212,0.6)]" 
+            : "bg-gray-200 shadow-[0_0_5px_rgba(255,255,255,0.2)]";
+
         return (
             <div className="w-full h-4 flex items-center justify-between gap-2 my-1">
                  {isYang ? (
-                    <div className="flex-1 h-full bg-accent-gold rounded-sm shadow-[0_0_10px_rgba(212,175,55,0.4)]"></div>
+                    <div className={`flex-1 h-full rounded-sm ${colorClass} transition-colors duration-300`}></div>
                  ) : (
                     <>
-                        <div className="flex-1 h-full bg-accent-gold rounded-sm shadow-[0_0_10px_rgba(212,175,55,0.4)]"></div>
+                        <div className={`flex-1 h-full rounded-sm ${colorClass} transition-colors duration-300`}></div>
                         <div className="w-4"></div>
-                        <div className="flex-1 h-full bg-accent-gold rounded-sm shadow-[0_0_10px_rgba(212,175,55,0.4)]"></div>
+                        <div className={`flex-1 h-full rounded-sm ${colorClass} transition-colors duration-300`}></div>
                     </>
                  )}
             </div>
@@ -162,11 +169,21 @@ const Oracle: React.FC = () => {
 
                     {/* Coins */}
                     <div className="flex gap-4">
-                        {coins.map((c, i) => (
-                            <div key={i} className={`w-20 h-20 rounded-full flex items-center justify-center text-2xl font-serif border-4 transition-all duration-300 ${tossing ? 'scale-110 border-white text-white' : 'border-accent-gold text-accent-gold shadow-gold-glow bg-black/40'}`}>
-                                {c === 3 ? 'Yang' : 'Yin'}
-                            </div>
-                        ))}
+                        {coins.map((c, i) => {
+                            const isYang = c === 3;
+                            // Yang = Gold, Yin = Silver/Gray
+                            const coinClass = tossing 
+                                ? 'scale-110 border-white text-white' 
+                                : isYang 
+                                    ? 'border-accent-gold text-accent-gold shadow-gold-glow bg-black/40' 
+                                    : 'border-gray-400 text-gray-300 shadow-[0_0_15px_rgba(255,255,255,0.2)] bg-black/40';
+
+                            return (
+                                <div key={i} className={`w-20 h-20 rounded-full flex items-center justify-center text-2xl font-serif border-4 transition-all duration-300 ${coinClass}`}>
+                                    {isYang ? 'Yang' : 'Yin'}
+                                </div>
+                            );
+                        })}
                     </div>
 
                     <button 
@@ -182,13 +199,24 @@ const Oracle: React.FC = () => {
             {step === 'result' && primaryHex && currentReading && (
                 <div className="w-full flex flex-col items-center space-y-12 animate-fade-in pb-12">
                     
+                    {/* Title Block Outside */}
+                     <div className="flex flex-col items-center text-center animate-fade-in -mb-4 pt-4">
+                        <span className="text-sm font-bold tracking-[0.2em] text-primary mb-3 uppercase opacity-90">PRIMARY HEXAGRAM</span>
+                        <h1 className="text-4xl md:text-5xl font-serif text-white font-bold tracking-wide leading-tight drop-shadow-lg">
+                            <span className="text-gray-500 mr-3 opacity-50 font-light text-3xl align-middle">{primaryHex.number}.</span>
+                            {primaryHex.name}
+                        </h1>
+                    </div>
+
                     {/* Primary Display */}
                     <div className="flex flex-col md:flex-row gap-8 items-start justify-center w-full">
                         <div className="w-full md:w-auto flex justify-center">
                             <HexagramDisplay 
                                 lines={currentReading.lines} 
                                 data={primaryHex} 
-                                label="PRIMARY HEXAGRAM"
+                                label=""
+                                showName={true}
+                                onlyChineseName={true}
                             />
                         </div>
 
@@ -230,6 +258,15 @@ const Oracle: React.FC = () => {
                     {/* Transformed Result */}
                     {changedHex && (
                         <div className="w-full space-y-8 pt-10 border-t border-white/10">
+                            {/* Transformed Hexagram Title - Moved Outside */}
+                            <div className="flex flex-col items-center text-center animate-fade-in -mb-4 pt-4">
+                                <span className="text-sm font-bold tracking-[0.2em] text-primary mb-3 uppercase opacity-90">TRANSFORMED HEXAGRAM</span>
+                                <h1 className="text-4xl md:text-5xl font-serif text-white font-bold tracking-wide leading-tight drop-shadow-lg">
+                                    <span className="text-gray-500 mr-3 opacity-50 font-light text-3xl align-middle">{changedHex.number}.</span>
+                                    {changedHex.name}
+                                </h1>
+                            </div>
+
                             <div className="flex flex-col md:flex-row gap-8 items-start justify-center w-full">
                                 <div className="w-full md:w-auto flex justify-center">
                                      <HexagramDisplay 
@@ -239,7 +276,9 @@ const Oracle: React.FC = () => {
                                             return l; // 7->7, 8->8
                                         })} 
                                         data={changedHex} 
-                                        label="TRANSFORMED HEXAGRAM"
+                                        label=""
+                                        showName={true}
+                                        onlyChineseName={true}
                                     />
                                 </div>
 

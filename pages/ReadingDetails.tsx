@@ -49,7 +49,7 @@ const ReadingDetails: React.FC = () => {
              <div className="w-full flex flex-col items-center space-y-12 pb-12">
                 
                 {/* Header */}
-                <div className="text-center space-y-4">
+                <div className="text-center space-y-4 w-full">
                     <span className="text-sm uppercase tracking-widest text-primary-glow">
                         {new Date(reading.timestamp).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                     </span>
@@ -59,13 +59,24 @@ const ReadingDetails: React.FC = () => {
                     </div>
                 </div>
 
+                {/* Primary Hexagram Title - Moved Outside */}
+                <div className="flex flex-col items-center text-center animate-fade-in -mb-4 pt-4">
+                    <span className="text-sm font-bold tracking-[0.2em] text-primary mb-3 uppercase opacity-90">PRIMARY HEXAGRAM</span>
+                    <h1 className="text-4xl md:text-5xl font-serif text-white font-bold tracking-wide leading-tight drop-shadow-lg">
+                        <span className="text-gray-500 mr-3 opacity-50 font-light text-3xl align-middle">{hexData.number}.</span>
+                        {hexData.name}
+                    </h1>
+                </div>
+
                 {/* Primary Hexagram Section */}
                 <div className="flex flex-col md:flex-row gap-8 items-start justify-center w-full">
                     <div className="w-full md:w-auto flex justify-center">
                         <HexagramDisplay 
                             lines={reading.lines} 
                             data={hexData} 
-                            label="PRIMARY HEXAGRAM"
+                            label=""
+                            showName={true}
+                            onlyChineseName={true}
                         />
                     </div>
 
@@ -108,6 +119,15 @@ const ReadingDetails: React.FC = () => {
                 {/* Secondary / Changed Hexagram */}
                 {changedHexData && (
                     <div className="w-full space-y-12 pt-10 border-t border-white/10">
+                        {/* Transformed Hexagram Title - Moved Outside */}
+                        <div className="flex flex-col items-center text-center animate-fade-in -mb-4 pt-4">
+                            <span className="text-sm font-bold tracking-[0.2em] text-primary mb-3 uppercase opacity-90">TRANSFORMED HEXAGRAM</span>
+                            <h1 className="text-4xl md:text-5xl font-serif text-white font-bold tracking-wide leading-tight drop-shadow-lg">
+                                <span className="text-gray-500 mr-3 opacity-50 font-light text-3xl align-middle">{changedHexData.number}.</span>
+                                {changedHexData.name}
+                            </h1>
+                        </div>
+
                         <div className="flex flex-col md:flex-row gap-8 items-start justify-center w-full">
                             <div className="w-full md:w-auto flex justify-center">
                                 <HexagramDisplay 
@@ -117,7 +137,9 @@ const ReadingDetails: React.FC = () => {
                                         return l; 
                                     })} 
                                     data={changedHexData} 
-                                    label="TRANSFORMED HEXAGRAM"
+                                    label=""
+                                    showName={true}
+                                    onlyChineseName={true}
                                 />
                             </div>
 

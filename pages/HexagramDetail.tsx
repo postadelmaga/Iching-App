@@ -20,35 +20,47 @@ const HexagramDetail: React.FC = () => {
         <div className="min-h-screen flex flex-col items-center justify-start pt-12 px-6 pb-20 max-w-6xl mx-auto animate-fade-in">
              <div className="w-full flex flex-col items-center space-y-12 pb-12">
                 
-                {/* Navigation Header */}
-                <div className="w-full flex justify-between items-center max-w-5xl px-2 md:px-4">
-                    <button 
-                        onClick={() => navigate(`/hexagram/${prevId}`)}
-                        className="text-gray-500 hover:text-accent-gold transition-colors flex items-center gap-2 group p-2"
-                        title={`Go to Hexagram ${prevId}`}
-                    >
-                        <span className="material-symbols-outlined text-3xl group-hover:-translate-x-1 transition-transform">arrow_back</span>
-                        <span className="hidden md:inline font-serif text-sm">Prev</span>
-                    </button>
-                    
-                    <div className="flex flex-col items-center flex-1 px-4 text-center">
-                        <span className="text-2xl md:text-3xl font-serif font-bold text-primary mb-2 shadow-purple-500/20 drop-shadow-sm">
-                            {hexId}
-                        </span>
-                        <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif text-white font-bold tracking-wide leading-tight drop-shadow-md">
-                            {hexData.name}
-                        </h1>
-                        <span className="text-lg md:text-xl font-serif text-accent-gold italic mt-2 opacity-90">{hexData.chineseName}</span>
+                {/* Header Container */}
+                <div className="w-full max-w-5xl">
+                    {/* Navigation Row: Arrows + Number */}
+                    <div className="relative flex items-center justify-between px-2 md:px-4 py-4">
+                        {/* Prev Button */}
+                        <button 
+                            onClick={() => navigate(`/hexagram/${prevId}`)}
+                            className="text-gray-500 hover:text-accent-gold transition-colors flex items-center gap-2 group p-2 z-10"
+                            title={`Go to Hexagram ${prevId}`}
+                        >
+                            <span className="material-symbols-outlined text-3xl group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                            <span className="hidden md:inline font-serif text-sm tracking-widest uppercase">Prev</span>
+                        </button>
+                        
+                        {/* Number (Absolutely Centered) */}
+                        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+                            <span className="text-4xl md:text-5xl font-serif font-bold text-primary shadow-purple-500/20 drop-shadow-sm">
+                                {hexId}
+                            </span>
+                        </div>
+
+                        {/* Next Button */}
+                        <button 
+                            onClick={() => navigate(`/hexagram/${nextId}`)}
+                            className="text-gray-500 hover:text-accent-gold transition-colors flex items-center gap-2 group p-2 z-10"
+                            title={`Go to Hexagram ${nextId}`}
+                        >
+                            <span className="hidden md:inline font-serif text-sm tracking-widest uppercase">Next</span>
+                            <span className="material-symbols-outlined text-3xl group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                        </button>
                     </div>
 
-                    <button 
-                        onClick={() => navigate(`/hexagram/${nextId}`)}
-                        className="text-gray-500 hover:text-accent-gold transition-colors flex items-center gap-2 group p-2"
-                        title={`Go to Hexagram ${nextId}`}
-                    >
-                        <span className="hidden md:inline font-serif text-sm">Next</span>
-                        <span className="material-symbols-outlined text-3xl group-hover:translate-x-1 transition-transform">arrow_forward</span>
-                    </button>
+                    {/* Title & Chinese Name Row */}
+                    <div className="flex flex-col items-center text-center mt-2 animate-fade-in">
+                        <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif text-white font-bold tracking-wide leading-tight drop-shadow-md uppercase">
+                            {hexData.name}
+                        </h1>
+                        <span className="text-xl md:text-2xl font-serif text-accent-gold italic mt-3 opacity-90">
+                            {hexData.chineseName}
+                        </span>
+                    </div>
                 </div>
 
                 {/* Main Content Layout */}
