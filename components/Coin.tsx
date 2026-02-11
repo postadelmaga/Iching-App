@@ -8,9 +8,9 @@ interface CoinProps {
 
 // Using local images from the /images folder
 // Ensure you have 'yang.png' and 'yin.png' in your project's public/images directory
-const YANG_IMG = "../images/Yang_Coin.png";
-const YIN_IMG = "../images/Yin_Coin.png";
-``
+import YANG_IMG from '@/assets/Yang_Coin.png';
+import YIN_IMG from '@/assets/Yin_Coin.png';
+
 const Coin: React.FC<CoinProps> = ({ value, isTossing, delay = 0 }) => {
     // Determine target rotation based on value
     // HTML structure: Front is Yin, Back is Yang.
