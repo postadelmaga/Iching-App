@@ -8,9 +8,9 @@ interface CoinProps {
 
 // Using local images from the /images folder
 // Ensure you have 'yang.png' and 'yin.png' in your project's public/images directory
-const YANG_IMG = "/images/yang.png";
-const YIN_IMG = "/images/yin.png";
-
+const YANG_IMG = "../images/Yang_Coin.png";
+const YIN_IMG = "../images/Yin_Coin.png";
+``
 const Coin: React.FC<CoinProps> = ({ value, isTossing, delay = 0 }) => {
     // Determine target rotation based on value
     // HTML structure: Front is Yin, Back is Yang.
@@ -21,7 +21,7 @@ const Coin: React.FC<CoinProps> = ({ value, isTossing, delay = 0 }) => {
     return (
         <div className="coin-container">
             <div className="coin-wrapper">
-                <div 
+                <div
                     className={`coin ${isTossing ? 'flipping' : ''}`}
                     style={{
                         // Apply the static rotation when not tossing
@@ -32,9 +32,9 @@ const Coin: React.FC<CoinProps> = ({ value, isTossing, delay = 0 }) => {
                 >
                     {/* Front Face: Yin */}
                     <div className="coin-face front">
-                        <img 
-                            src={YIN_IMG} 
-                            alt="Yin Coin" 
+                        <img
+                            src={YIN_IMG}
+                            alt="Yin Coin"
                             onError={(e) => {
                                 e.currentTarget.style.display = 'none';
                                 if (e.currentTarget.parentElement) {
@@ -44,12 +44,12 @@ const Coin: React.FC<CoinProps> = ({ value, isTossing, delay = 0 }) => {
                             }}
                         />
                     </div>
-                    
+
                     {/* Back Face: Yang */}
                     <div className="coin-face back">
-                        <img 
-                            src={YANG_IMG} 
-                            alt="Yang Coin" 
+                        <img
+                            src={YANG_IMG}
+                            alt="Yang Coin"
                             onError={(e) => {
                                 e.currentTarget.style.display = 'none';
                                 if (e.currentTarget.parentElement) {
