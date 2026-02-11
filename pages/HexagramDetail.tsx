@@ -52,14 +52,11 @@ const HexagramDetail: React.FC = () => {
                         </button>
                     </div>
 
-                    {/* Title & Chinese Name Row */}
+                    {/* Title Row */}
                     <div className="flex flex-col items-center text-center mt-2 animate-fade-in">
                         <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif text-white font-bold tracking-wide leading-tight drop-shadow-md uppercase">
                             {hexData.name}
                         </h1>
-                        <span className="text-xl md:text-2xl font-serif text-accent-gold italic mt-3 opacity-90">
-                            {hexData.chineseName}
-                        </span>
                     </div>
                 </div>
 
@@ -71,8 +68,9 @@ const HexagramDetail: React.FC = () => {
                         <HexagramDisplay 
                             lines={structure} 
                             data={hexData} 
-                            label={hexData.chineseName}
-                            showName={false}
+                            label=""
+                            showName={true}
+                            onlyChineseName={true}
                             className="w-full max-w-[320px]" 
                         />
                     </div>
@@ -81,17 +79,18 @@ const HexagramDetail: React.FC = () => {
                     <div className="flex-1 flex flex-col gap-6 max-w-2xl">
                         
                         {/* Judgment */}
-                        <div className="bg-card-dark/50 p-8 rounded-2xl border border-white/5 flex-1 flex flex-col justify-center min-h-[240px] hover:border-white/10 transition-colors shadow-lg">
-                            <h4 className="text-sm font-bold text-accent-gold mb-4 uppercase tracking-widest border-b border-white/5 pb-2">Judgment</h4>
-                            <p className="text-gray-200 leading-relaxed text-lg font-light">
+                        <div className="bg-card-dark/50 p-6 rounded-xl border border-white/5 hover:border-accent-gold/30 transition-all group shadow-md hover:shadow-gold-glow/10">
+                            <h4 className="text-lg font-serif text-accent-gold mb-2">Judgment</h4>
+                            <p className="text-gray-300 italic leading-relaxed group-hover:text-white transition-colors text-lg">
                                 {hexData.judgment}
                             </p>
                         </div>
 
+
                         {/* Image */}
-                        <div className="bg-card-dark/50 p-8 rounded-2xl border border-white/5 flex-1 flex flex-col justify-center min-h-[240px] hover:border-white/10 transition-colors shadow-lg">
-                            <h4 className="text-sm font-bold text-accent-gold mb-4 uppercase tracking-widest border-b border-white/5 pb-2">The Image</h4>
-                            <p className="text-gray-200 leading-relaxed text-lg font-light">
+                        <div className="bg-card-dark/50 p-6 rounded-xl border border-white/5 hover:border-accent-gold/30 transition-all group shadow-md hover:shadow-gold-glow/10">
+                            <h4 className="text-lg font-serif text-accent-gold mb-2">The Image</h4>
+                            <p className="text-gray-300 italic leading-relaxed group-hover:text-white transition-colors text-lg">
                                 {hexData.image}
                             </p>
                         </div>
@@ -106,14 +105,15 @@ const HexagramDetail: React.FC = () => {
                             const lineNum = idx + 1;
                             
                             return (
-                                <div key={idx} className="bg-card-dark border border-white/10 p-6 rounded-xl hover:border-accent-gold/30 transition-all group shadow-md hover:shadow-gold-glow/10">
+                                <div key={idx} className="bg-card-dark border border-white/10 p-6 rounded-xl hover:border-primary/30 transition-all group shadow-md hover:shadow-glow/10">
                                     <div className="flex flex-row gap-6 items-start">
                                         {/* Small Hexagram Indicator */}
                                          <div className="flex flex-col gap-[4px] w-12 min-w-[3rem] opacity-90 pt-1 select-none">
                                             {[...structure].reverse().map((lineVal, i) => {
                                                 const logicalIndex = 5 - i; // 0 is bottom
                                                 const isActive = logicalIndex === idx;
-                                                const colorClass = isActive ? "bg-accent-gold shadow-[0_0_8px_rgba(212,175,55,0.8)] opacity-100" : "bg-white/10 opacity-50";
+                                                // Purple for active line
+                                                const colorClass = isActive ? "bg-primary shadow-[0_0_8px_rgba(115,17,212,0.8)] opacity-100" : "bg-white/10 opacity-50";
                                                 
                                                 return (
                                                     <div key={i} className="flex justify-between h-2 w-full">
@@ -132,7 +132,7 @@ const HexagramDetail: React.FC = () => {
                                         </div>
 
                                         <div className="flex flex-col">
-                                             <span className="text-xs text-accent-gold font-bold uppercase tracking-widest mb-1 opacity-70">Line {lineNum}</span>
+                                             <span className="text-xs text-primary font-bold uppercase tracking-widest mb-1 opacity-90">Line {lineNum}</span>
                                              <p className="text-gray-300 italic leading-relaxed group-hover:text-white transition-colors text-lg">
                                                 "{text}"
                                             </p>

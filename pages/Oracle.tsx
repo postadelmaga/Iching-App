@@ -4,6 +4,7 @@ import { LineValue, Reading, HexagramData } from '../types';
 import { getHexagramData, getHexagramId } from '../constants';
 import { useNavigate } from 'react-router-dom';
 import HexagramDisplay from '../components/HexagramDisplay';
+import Coin from '../components/Coin';
 
 const Oracle: React.FC = () => {
     const navigate = useNavigate();
@@ -29,13 +30,14 @@ const Oracle: React.FC = () => {
         // Animate coins for a bit
         let tosses = 0;
         const interval = setInterval(() => {
+            // Randomize visual state during toss
             setCoins([
                 Math.random() > 0.5 ? 3 : 2,
                 Math.random() > 0.5 ? 3 : 2,
                 Math.random() > 0.5 ? 3 : 2
             ]);
             tosses++;
-            if (tosses > 10) {
+            if (tosses > 15) { // Run for about 1.5 seconds
                 clearInterval(interval);
                 finalizeToss();
             }
@@ -54,7 +56,7 @@ const Oracle: React.FC = () => {
         setTossing(false);
 
         if (newLines.length === 6) {
-            setTimeout(() => completeReading(newLines), 1000);
+            setTimeout(() => completeReading(newLines), 2000); // Wait a bit longer to see the last coin result
         }
     };
 
@@ -68,9 +70,6 @@ const Oracle: React.FC = () => {
 
         if (hasMoving) {
             // Apply changes: 6 becomes 7 (Young Yang), 9 becomes 8 (Young Yin)
-            // 6 is Old Yin -> Changes to Yang (7)
-            // 9 is Old Yang -> Changes to Yin (8)
-            // 7 and 8 remain same
             const changedLines = finalLines.map(l => {
                 if (l === 6) return 7;
                 if (l === 9) return 8;
@@ -167,31 +166,43 @@ const Oracle: React.FC = () => {
                         ))}
                     </div>
 
-                    {/* Coins */}
-                    <div className="flex gap-4">
-                        {coins.map((c, i) => {
-                            const isYang = c === 3;
-                            // Yang = Gold, Yin = Silver/Gray
-                            const coinClass = tossing 
-                                ? 'scale-110 border-white text-white' 
-                                : isYang 
-                                    ? 'border-accent-gold text-accent-gold shadow-gold-glow bg-black/40' 
-                                    : 'border-gray-400 text-gray-300 shadow-[0_0_15px_rgba(255,255,255,0.2)] bg-black/40';
+                    {/* 3D Coins */}
+                    <div className="flex gap-4 md:gap-10 justify-center w-full py-4">
+                        {coins.map((c, i) => (
+                            <Coin 
+                                key={i} 
+                                value={c} 
+                                isTossing={tossing} 
+                                delay={i * 0.1} // Stagger animation slightly
+                            />
+                        ))}
+                    </div>
 
-                            return (
-                                <div key={i} className={`w-20 h-20 rounded-full flex items-center justify-center text-2xl font-serif border-4 transition-all duration-300 ${coinClass}`}>
-                                    {isYang ? 'Yang' : 'Yin'}
-                                </div>
-                            );
-                        })}
+                    <div className="h-10">
+                        {/* Status Text / Result Display */}
+                        {!tossing && (
+                            <div className="text-center animate-fade-in">
+                                <span className="text-lg font-serif text-white tracking-wider">
+                                    {coins.reduce((a, b) => a + b, 0)}: 
+                                    {(() => {
+                                        const sum = coins.reduce((a, b) => a + b, 0);
+                                        if (sum === 6) return " Old Yin (Moving)";
+                                        if (sum === 7) return " Young Yang (Static)";
+                                        if (sum === 8) return " Young Yin (Static)";
+                                        if (sum === 9) return " Old Yang (Moving)";
+                                        return "";
+                                    })()}
+                                </span>
+                            </div>
+                        )}
                     </div>
 
                     <button 
                         onClick={tossCoins}
                         disabled={tossing}
-                        className="bg-transparent border border-accent-gold text-accent-gold hover:bg-accent-gold hover:text-black px-12 py-3 rounded-full font-bold tracking-widest uppercase transition-all duration-300"
+                        className="bg-transparent border border-accent-gold text-accent-gold hover:bg-accent-gold hover:text-black px-12 py-3 rounded-full font-bold tracking-widest uppercase transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        {tossing ? 'Tossing...' : 'Toss Coins'}
+                        {tossing ? 'Divining...' : 'Toss Coins'}
                     </button>
                 </div>
             )}
@@ -221,13 +232,17 @@ const Oracle: React.FC = () => {
                         </div>
 
                         <div className="flex-1 space-y-6 max-w-xl">
-                            <div className="bg-card-dark/50 p-6 rounded-xl border border-white/5">
+                            <div className="bg-card-dark/50 p-6 rounded-xl border border-white/5 hover:border-accent-gold/30 transition-all group shadow-md hover:shadow-gold-glow/10">
                                 <h4 className="text-lg font-serif text-accent-gold mb-2">Judgment</h4>
-                                <p className="text-gray-200 leading-relaxed">{primaryHex.judgment}</p>
+                                <p className="text-gray-300 italic leading-relaxed group-hover:text-white transition-colors text-lg">
+                                    {primaryHex.judgment}
+                                </p>
                             </div>
-                            <div className="bg-card-dark/50 p-6 rounded-xl border border-white/5">
+                            <div className="bg-card-dark/50 p-6 rounded-xl border border-white/5 hover:border-accent-gold/30 transition-all group shadow-md hover:shadow-gold-glow/10">
                                 <h4 className="text-lg font-serif text-accent-gold mb-2">The Image</h4>
-                                <p className="text-gray-200 leading-relaxed">{primaryHex.image}</p>
+                                <p className="text-gray-300 italic leading-relaxed group-hover:text-white transition-colors text-lg">
+                                    {primaryHex.image}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -238,17 +253,48 @@ const Oracle: React.FC = () => {
                             <h3 className="text-2xl font-serif text-white text-center border-t border-white/10 pt-10">The Moving Lines</h3>
                             <div className="grid gap-4">
                                 {movingLines.map(({ val, idx }) => (
-                                    <div key={idx} className="bg-primary/10 border border-primary/30 p-6 rounded-xl relative overflow-hidden">
-                                        <div className="absolute top-0 left-0 w-1 h-full bg-primary-glow"></div>
-                                        <div className="flex items-center gap-4 mb-2">
-                                             <span className="text-accent-gold font-bold uppercase tracking-wider text-sm">Line {idx + 1}</span>
-                                             <span className="text-xs text-gray-400 bg-black/30 px-2 py-1 rounded">
-                                                {val === 6 ? 'Old Yin (Changes to Yang)' : 'Old Yang (Changes to Yin)'}
-                                             </span>
+                                    <div key={idx} className="bg-card-dark border border-white/10 p-6 rounded-xl hover:border-primary/30 transition-all group shadow-md hover:shadow-glow/10">
+                                        <div className="flex flex-row gap-6 items-start">
+                                            {/* Small Hexagram Indicator */}
+                                            <div className="flex flex-col gap-[4px] w-12 min-w-[3rem] opacity-90 pt-1 select-none">
+                                                {[...currentReading.lines].reverse().map((lineVal, i) => {
+                                                    const logicalIndex = 5 - i; // 0 is bottom
+                                                    const isTargetLine = logicalIndex === idx;
+                                                    const isSolid = lineVal === 7 || lineVal === 9;
+                                                    
+                                                    // Highlight the moving line in purple, others dim
+                                                    const colorClass = isTargetLine 
+                                                        ? "bg-primary shadow-[0_0_8px_rgba(115,17,212,0.8)] opacity-100" 
+                                                        : "bg-white/10 opacity-50";
+                                                    
+                                                    return (
+                                                        <div key={i} className="flex justify-between h-2 w-full">
+                                                            {isSolid ? (
+                                                                <div className={`w-full ${colorClass} rounded-[1px] transition-all`}></div>
+                                                            ) : (
+                                                                <>
+                                                                    <div className={`w-[40%] ${colorClass} rounded-[1px] transition-all`}></div>
+                                                                    <div className="w-[20%]"></div>
+                                                                    <div className={`w-[40%] ${colorClass} rounded-[1px] transition-all`}></div>
+                                                                </>
+                                                            )}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+
+                                            <div className="flex flex-col w-full">
+                                                <div className="flex items-center gap-3 mb-1">
+                                                    <span className="text-xs text-primary font-bold uppercase tracking-widest opacity-90">Line {idx + 1}</span>
+                                                    <span className="text-[10px] text-gray-500 uppercase tracking-wider border border-white/10 px-1.5 rounded">
+                                                        {val === 6 ? 'Old Yin' : 'Old Yang'} &rarr; {val === 6 ? 'Yang' : 'Yin'}
+                                                    </span>
+                                                </div>
+                                                <p className="text-gray-300 italic leading-relaxed group-hover:text-white transition-colors text-lg">
+                                                    "{primaryHex.lines[idx]}"
+                                                </p>
+                                            </div>
                                         </div>
-                                        <p className="text-white text-lg italic leading-relaxed">
-                                            "{primaryHex.lines[idx]}"
-                                        </p>
                                     </div>
                                 ))}
                             </div>
@@ -283,13 +329,17 @@ const Oracle: React.FC = () => {
                                 </div>
 
                                 <div className="flex-1 space-y-6 max-w-xl">
-                                    <div className="bg-card-dark/50 p-6 rounded-xl border border-white/5">
+                                    <div className="bg-card-dark/50 p-6 rounded-xl border border-white/5 hover:border-accent-gold/30 transition-all group shadow-md hover:shadow-gold-glow/10">
                                         <h4 className="text-lg font-serif text-accent-gold mb-2">Judgment</h4>
-                                        <p className="text-gray-200 leading-relaxed">{changedHex.judgment}</p>
+                                        <p className="text-gray-300 italic leading-relaxed group-hover:text-white transition-colors text-lg">
+                                            {changedHex.judgment}
+                                        </p>
                                     </div>
-                                    <div className="bg-card-dark/50 p-6 rounded-xl border border-white/5">
+                                    <div className="bg-card-dark/50 p-6 rounded-xl border border-white/5 hover:border-accent-gold/30 transition-all group shadow-md hover:shadow-gold-glow/10">
                                         <h4 className="text-lg font-serif text-accent-gold mb-2">The Image</h4>
-                                        <p className="text-gray-200 leading-relaxed">{changedHex.image}</p>
+                                        <p className="text-gray-300 italic leading-relaxed group-hover:text-white transition-colors text-lg">
+                                            {changedHex.image}
+                                        </p>
                                     </div>
                                 </div>
                             </div>

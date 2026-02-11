@@ -61,33 +61,37 @@ const HexagramDisplay: React.FC<HexagramDisplayProps> = ({
     };
 
     return (
-        <div className={`flex flex-col items-center bg-card-dark p-8 rounded-2xl border border-white/5 shadow-2xl w-full max-w-sm ${className}`}>
-            {/* Header */}
-            <div className={`text-center w-full ${showName ? 'mb-8' : 'mb-6'}`}>
-                {label && <div className="text-sm font-bold tracking-[0.2em] text-primary mb-3 uppercase opacity-90">{label}</div>}
-                
-                {showName && (
-                    <>
-                        {!onlyChineseName && (
-                            <h2 className="text-3xl md:text-4xl font-serif font-bold text-white leading-tight mb-2">
-                                <span className="text-gray-500 mr-2 opacity-50 font-light text-2xl align-middle">{data.number}.</span>
-                                {data.name}
-                            </h2>
-                        )}
-                        
-                        <div className="text-xl font-serif text-accent-gold italic opacity-80">{data.chineseName}</div>
-                    </>
-                )}
+        <div className={`flex flex-col gap-4 w-full max-w-sm ${className}`}>
+            
+            {/* Main Card: Hexagram Lines & Name */}
+            <div className="flex flex-col items-center bg-card-dark p-8 rounded-2xl border border-white/5 shadow-2xl w-full">
+                {/* Header */}
+                <div className={`text-center w-full ${showName ? 'mb-8' : 'mb-6'}`}>
+                    {label && <div className="text-sm font-bold tracking-[0.2em] text-primary mb-3 uppercase opacity-90">{label}</div>}
+                    
+                    {showName && (
+                        <>
+                            {!onlyChineseName && (
+                                <h2 className="text-3xl md:text-4xl font-serif font-bold text-white leading-tight mb-2">
+                                    <span className="text-gray-500 mr-2 opacity-50 font-light text-2xl align-middle">{data.number}.</span>
+                                    {data.name}
+                                </h2>
+                            )}
+                            
+                            <div className="text-xl font-serif text-accent-gold italic opacity-80">{data.chineseName}</div>
+                        </>
+                    )}
+                </div>
+
+                {/* Hexagram Lines (Rendered Bottom to Top via flex-col-reverse) */}
+                <div className={`flex flex-col-reverse gap-3 w-48 relative`}>
+                    {lines.map((val, idx) => renderLine(val, idx))}
+                </div>
             </div>
 
-            {/* Hexagram Lines (Rendered Bottom to Top via flex-col-reverse) */}
-            <div className={`flex flex-col-reverse gap-3 w-48 relative ${showName ? 'mb-8' : 'mb-6'}`}>
-                {lines.map((val, idx) => renderLine(val, idx))}
-            </div>
-
-            {/* Trigram Footer */}
+            {/* Trigram Footer - Detached & Distinct */}
             {showTrigrams && lowerTrigram && upperTrigram && (
-                <div className="w-full flex justify-between px-4 pt-6 border-t border-white/10 mt-auto">
+                <div className="w-full flex justify-around px-6 py-4 bg-card-dark rounded-xl border border-white/10 shadow-lg">
                     <div className="flex flex-col items-center">
                         <span className="text-[10px] uppercase tracking-widest text-gray-500 mb-1">Upper</span>
                         <div className="flex items-center gap-2">
